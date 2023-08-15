@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import StartScreen from './components/StartScreen';
+import GameBoard from './components/GameBoard';
+import GameOver from './components/GameOver';
 
-function App() {
+const App = () => {
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameMode, setGameMode] = useState('');
+  const [gridSize, setGridSize] = useState('');
+
+  const handleStartGame = (mode, size) => {
+    setGameStarted(true);
+    setGameMode(mode);
+    setGridSize(size);
+  };
+
+  const handleGameOver = () => {
+    setGameOver(true);
+  };
+
+  const handleRestartGame = () => {
+    setGameStarted(false);
+    setGameOver(false);
+    setGameMode('');
+    setGridSize('');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      {!gameStarted && !gameOver && (
+        <StartScreen onStartGame={handleStartGame} />
+      )}
+      {gameStarted && !gameOver && (
+        <GameBoard
+          gameMode={gameMode}
+          gridSize={gridSize}
+          onGameOver={handleGameOver}
+        />
+      )}
+      {gameOver && (
+        <GameOver onRestartGame={handleRestartGame} />
+      )}
     </div>
   );
-}
+};
 
 export default App;
